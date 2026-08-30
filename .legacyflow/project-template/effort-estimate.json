@@ -1,0 +1,14 @@
+{
+  "target_field": "",
+  "files_to_modify": 0,
+  "files_to_retest": 0,
+  "reference_count": 0,
+  "write_references": 0,
+  "duplicated_rule_count": 0,
+  "change_complexity": "",
+  "complexity_reason": "",
+  "estimated_hours_range": "",
+  "estimated_hours_without_tool": "",
+  "hours_saved_estimate": "",
+  "recommended_actions": []
+}

@@ -1,0 +1,207 @@
+     H DFTACTGRP(*YES) ACTGRP(*CALLER)
+     H OPTION(*NODEBUGIO)
+      *----------------------------------------------------------------
+      * CUSTMAST  -  Customer Master Maintenance
+      * Type:        Fixed-format OPM RPG/400
+      * Purpose:     Interactive program to add, change, and delete
+      *              customer master records.
+      *              Enforces CUST_STATUS business rules on update.
+      *
+      * Files used:
+      *   CUSTMSTPF  - Customer master physical file (I/O)
+      *   CUSTMSTDF  - Display file for 5250 screen (I/O)
+      *
+      * Called by:   JOBCTL (CL) as part of daily batch open
+      *              and interactively from the customer menu
+      *----------------------------------------------------------------
+      *
+      * File Declarations
+      *
+     FCUSTMSTPF UF A E           K DISK
+     FCUSTMSTDF CF   E             WORKSTN
+      *
+      * Work fields
+      *
+     D WK_STATUS       S              1A
+     D WK_OLD_STATUS   S              1A
+     D WK_CREDIT       S              9P 2
+     D WK_MSG          S             78A
+     D WK_FOUND        S              1N
+     D WK_VALID        S              1N
+      *
+      * Named indicators
+      *
+     D IND_EOF         S              1N
+     D IND_NOTFND      S              1N
+      *
+      ****--------------------------------------------------------------
+      * Main processing cycle
+      ****--------------------------------------------------------------
+     C                   EXFMT     MAINSCR
+     C                   DOW       NOT *IN03
+      *
+      *   User pressed F3 = exit
+      *
+     C                   IF        *IN03
+     C                   LEAVE
+     C                   END
+      *
+      *   Process action key
+      *
+     C                   SELECT
+      *   F6 = Add new customer
+     C                   WHEN      *IN06
+     C                   EXSR      SR_ADD
+      *   F11 = Change customer
+     C                   WHEN      *IN11
+     C                   EXSR      SR_CHANGE
+      *   F14 = Delete customer
+     C                   WHEN      *IN14
+     C                   EXSR      SR_DELETE
+     C                   ENDSL
+      *
+     C                   EXFMT     MAINSCR
+     C                   ENDDO
+      *
+     C                   SETON                                        LR
+     C                   RETURN
+      *
+      ****--------------------------------------------------------------
+      * SR_ADD  -  Add a new customer record
+      ****--------------------------------------------------------------
+     C     SR_ADD        BEGSR
+      *
+     C                   EXFMT     ADDSCR
+     C                   IF        *IN12
+     C                   GOTO      END_ADD
+     C                   END
+      *
+      *   New customers must start as Active or Inactive only.
+      *   Suspended and Closed are not valid on creation.
+      *
+     C                   EVAL      WK_STATUS = CUST_STATUS
+     C                   IF        WK_STATUS <> 'A' AND
+     C                             WK_STATUS <> 'I'
+     C                   EVAL      WK_MSG = 'New customers must have' +
+     C                              ' status A (Active) or I (Inactive).'
+     C                   EXFMT     MSGSCR
+     C                   GOTO      END_ADD
+     C                   END
+      *
+      *   Credit limit must be positive
+      *
+     C                   IF        CUST_CREDIT_LMT <= 0
+     C                   EVAL      WK_MSG = 'Credit limit must be' +
+     C                              ' greater than zero.'
+     C                   EXFMT     MSGSCR
+     C                   GOTO      END_ADD
+     C                   END
+      *
+     C                   WRITE     CUSTREC
+     C     END_ADD       ENDSR
+      *
+      ****--------------------------------------------------------------
+      * SR_CHANGE  -  Change an existing customer record
+      ****--------------------------------------------------------------
+     C     SR_CHANGE     BEGSR
+      *
+     C     CUST_ID       CHAIN     CUSTMSTPF                          IND_NOTFND
+     C                   IF        IND_NOTFND
+     C                   EVAL      WK_MSG = 'Customer not found.'
+     C                   EXFMT     MSGSCR
+     C                   GOTO      END_CHG
+     C                   END
+      *
+     C                   EVAL      WK_OLD_STATUS = CUST_STATUS
+      *
+     C                   EXFMT     CHGSCR
+     C                   IF        *IN12
+     C                   GOTO      END_CHG
+     C                   END
+      *
+      *   Status transition rules:
+      *     Active (A)    -> Inactive (I), Suspended (S)        ALLOWED
+      *     Inactive (I)  -> Active (A)                         ALLOWED
+      *     Suspended (S) -> Active (A), Closed (C)             ALLOWED
+      *     Closed (C)    -> (no transitions allowed)           BLOCKED
+      *     Any status    -> Closed (C) directly from Active    BLOCKED
+      *
+     C                   EVAL      WK_STATUS = CUST_STATUS
+     C                   EVAL      WK_VALID  = *ON
+      *
+     C                   SELECT
+     C                   WHEN      WK_OLD_STATUS = 'A'
+     C                   IF        WK_STATUS <> 'A' AND
+     C                             WK_STATUS <> 'I' AND
+     C                             WK_STATUS <> 'S'
+     C                   EVAL      WK_VALID = *OFF
+     C                   END
+      *
+     C                   WHEN      WK_OLD_STATUS = 'I'
+     C                   IF        WK_STATUS <> 'I' AND
+     C                             WK_STATUS <> 'A'
+     C                   EVAL      WK_VALID = *OFF
+     C                   END
+      *
+     C                   WHEN      WK_OLD_STATUS = 'S'
+     C                   IF        WK_STATUS <> 'S' AND
+     C                             WK_STATUS <> 'A' AND
+     C                             WK_STATUS <> 'C'
+     C                   EVAL      WK_VALID = *OFF
+     C                   END
+      *
+     C                   WHEN      WK_OLD_STATUS = 'C'
+     C                   EVAL      WK_VALID = *OFF
+     C                   EVAL      WK_MSG   = 'Closed customers cannot' +
+     C                              ' be modified.'
+     C                   END
+     C                   ENDSL
+      *
+     C                   IF        NOT WK_VALID
+     C                   IF        WK_MSG = *BLANK
+     C                   EVAL      WK_MSG = 'Invalid status transition: ' +
+     C                              WK_OLD_STATUS + ' -> ' + WK_STATUS
+     C                   END
+     C                   EXFMT     MSGSCR
+     C                   GOTO      END_CHG
+     C                   END
+      *
+      *   If new balance exceeds 110% of credit limit, auto-suspend
+      *
+     C                   IF        CUST_BALANCE > CUST_CREDIT_LMT * 1.10
+     C                             AND WK_STATUS = 'A'
+     C                   EVAL      CUST_STATUS = 'S'
+     C                   EVAL      WK_MSG = 'Balance exceeds limit.' +
+     C                              ' Status auto-set to Suspended.'
+     C                   EXFMT     MSGSCR
+     C                   END
+      *
+     C                   UPDATE    CUSTREC
+     C     END_CHG       ENDSR
+      *
+      ****--------------------------------------------------------------
+      * SR_DELETE  -  Delete (close) a customer record
+      *               Does not physically delete — sets status to 'C'
+      ****--------------------------------------------------------------
+     C     SR_DELETE     BEGSR
+      *
+     C     CUST_ID       CHAIN     CUSTMSTPF                          IND_NOTFND
+     C                   IF        IND_NOTFND
+     C                   EVAL      WK_MSG = 'Customer not found.'
+     C                   EXFMT     MSGSCR
+     C                   GOTO      END_DEL
+     C                   END
+      *
+      *   Cannot close a customer with an outstanding balance
+      *
+     C                   IF        CUST_BALANCE > 0
+     C                   EVAL      WK_MSG = 'Cannot close customer with' +
+     C                              ' outstanding balance.'
+     C                   EXFMT     MSGSCR
+     C                   GOTO      END_DEL
+     C                   END
+      *
+     C                   EVAL      CUST_STATUS = 'C'
+     C                   UPDATE    CUSTREC
+      *
+     C     END_DEL       ENDSR

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegacyFlow — Projects</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <!-- run-panel.js activates when Flask backend is running on localhost:5000 -->
+  <script src="run-panel.js" defer></script>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ── Sidebar ───────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <a class="sidebar-logo" href="index.html">
+      <div class="sidebar-logo-icon">LF</div>
+      <div class="sidebar-logo-text">
+        <div class="sidebar-logo-name">LegacyFlow</div>
+        <div class="sidebar-logo-sub">Orchestrator</div>
+      </div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a class="sidebar-link" href="index.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M6.906.664a1.749 1.749 0 0 1 2.188 0l5.25 4.2c.415.332.657.835.656 1.366l-.002 7.17A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.401V6.23c0-.531.242-1.034.656-1.366L6.906.664Z"/></svg>
+        Home
+      </a>
+      <a class="sidebar-link sidebar-link-cta" href="orchestrate.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h4.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L9.293 7.5H4.5Z"/></svg>
+        Run Orchestration
+      </a>
+      <a class="sidebar-link active" href="projects.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5L6.25 1.5h-4.5Z"/></svg>
+        Projects / Runs
+      </a>
+      <div class="sidebar-section">Analysis</div>
+      <a class="sidebar-link" href="projects.html?filter=impact-analysis">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 2.75a.25.25 0 0 1 .25-.25h12.5a.25.25 0 0 1 .25.25v10.5a.25.25 0 0 1-.25.25H1.75a.25.25 0 0 1-.25-.25ZM1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25V2.75A1.75 1.75 0 0 0 14.25 1ZM5 9a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm-.75-3.25a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H5a.75.75 0 0 1-.75-.75Z"/></svg>
+        Impact Analysis
+      </a>
+      <a class="sidebar-link" href="projects.html?filter=business-rules-extraction">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3.75 2h-.75v1.5h.75a.25.25 0 0 1 0 .5H3a.75.75 0 0 1 0-1.5h.75ZM3 5.25a.75.75 0 0 1 .75-.75h.75v1.5H3.75A.25.25 0 0 1 3.5 5.75V5.25ZM4.5 9h-.75a.75.75 0 0 0 0 1.5H4.5V9ZM6 2.75A.75.75 0 0 1 6.75 2h6.5A.75.75 0 0 1 14 2.75v10.5A.75.75 0 0 1 13.25 14h-6.5A.75.75 0 0 1 6 13.25ZM7.5 3.5v9h5v-9Z"/></svg>
+        Business Rules
+      </a>
+      <div class="sidebar-section">Learn</div>
+      <a class="sidebar-link" href="how-it-works.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>
+        How It Works
+      </a>
+      <a class="sidebar-link" href="about.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>
+        About the Tool
+      </a>
+      <a class="sidebar-link" href="demo-guide.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"/></svg>
+        Demo Guide
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <span class="sidebar-badge">IBM Bob 2.0</span>
+    </div>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────────────── -->
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <a href="index.html">LegacyFlow</a>
+        <span class="sep">/</span>
+        <span class="current">Projects</span>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="page-title">Projects</div>
+      <p class="page-subtitle" style="margin-bottom:28px">
+        Each entry is a completed LegacyFlow analysis run. Click any card to view the full results — impact report, business rules, risk score, effort estimate, and audit trail.
+      </p>
+
+      <!-- Run panel is injected here by run-panel.js when Flask backend is running -->
+      <div class="page-hero"></div>
+
+      <!-- Aggregate stats -->
+      <div id="stats-bar" style="display:none" class="stats-bar"></div>
+
+      <!-- Project cards -->
+      <div id="project-list">
+        <div class="loading">Loading projects…</div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      Made with IBM Bob 2.0 &mdash; LegacyFlow Orchestrator
+    </footer>
+  </div>
+</div>
+
+<script>
+  const INDEX_URL = 'projects-index.json';
+  const filterParam = new URLSearchParams(location.search).get('filter');
+
+  function riskClass(score, band) {
+    if (band) return band.toLowerCase();
+    if (!score && score !== 0) return 'gray';
+    if (score <= 3)  return 'low';
+    if (score <= 6)  return 'medium';
+    if (score <= 9)  return 'high';
+    return 'critical';
+  }
+
+  function wfLabel(type) {
+    return { 'impact-analysis':'Impact Analysis', 'business-rules-extraction':'Rules Extraction' }[type] || type;
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }); }
+    catch { return iso; }
+  }
+
+  function escHtml(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  const iconFolder = `<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5L6.25 1.5h-4.5Zm0 1.5h3.94l1.25 1.5H14.25c.138 0 .25.112.25.25v8.5a.25.25 0 0 1-.25.25H1.75a.25.25 0 0 1-.25-.25V2.75c0-.138.112-.25.25-.25z"/></svg>`;
+  const iconCal    = `<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 0 1 4.75 0Zm8.5 6h-10.5v8.25c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V6Zm-2.5 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>`;
+  const iconArrow  = `<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06l2.97-2.97H3.75a.75.75 0 0 1 0-1.5h7.44L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg>`;
+
+  function renderStats(projects) {
+    const bar = document.getElementById('stats-bar');
+    const total    = projects.length;
+    const filesSum = projects.reduce((s,p) => s + (p.files_affected || 0), 0);
+    const rulesSum = projects.reduce((s,p) => s + (p.rules_extracted || 0), 0);
+    const highRisk = projects.filter(p => { const rc = riskClass(p.risk_score, p.risk_band); return rc === 'high' || rc === 'critical'; }).length;
+    bar.style.display = '';
+    bar.innerHTML = `
+      <div class="stat-item"><div class="stat-value">${total}</div><div class="stat-label">Total Runs</div></div>
+      <div class="stat-item"><div class="stat-value">${filesSum || '—'}</div><div class="stat-label">Files Affected</div></div>
+      <div class="stat-item"><div class="stat-value">${rulesSum || '—'}</div><div class="stat-label">Rules Extracted</div></div>
+      <div class="stat-item"><div class="stat-value" style="color:var(--danger)">${highRisk}</div><div class="stat-label">High Risk</div></div>`;
+  }
+
+  function renderProjects(allProjects) {
+    const el = document.getElementById('project-list');
+    const projects = filterParam
+      ? allProjects.filter(p => p.workflow_type === filterParam)
+      : allProjects;
+
+    if (!allProjects || allProjects.length === 0) {
+      el.innerHTML = `<div class="no-projects"><h2>No projects yet</h2><p>Run a LegacyFlow workflow in IBM Bob to create your first project.<br>See <code>NEW-PROJECT-INSTRUCTIONS.md</code> for how to get started.</p></div>`;
+      return;
+    }
+
+    renderStats(allProjects);
+
+    if (projects.length === 0) {
+      el.innerHTML = `<div class="no-projects"><h2>No runs match this filter</h2><p>No completed runs of type <code>${escHtml(filterParam)}</code> found.</p></div>`;
+      return;
+    }
+
+    const sorted = [...projects].sort((a,b) => (b.date||'').localeCompare(a.date||''));
+
+    el.innerHTML = sorted.map(p => {
+      const rc      = riskClass(p.risk_score, p.risk_band);
+      const hasRisk = p.risk_score != null;
+      const rcLabel = rc.charAt(0).toUpperCase() + rc.slice(1);
+      const url     = `viewer.html?project=${encodeURIComponent(p.project_id)}`;
+      const statusDot = p.status === 'complete'
+        ? `<span class="badge badge-low" style="gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:var(--success);display:inline-block"></span>Complete</span>`
+        : `<span class="badge badge-gray">${escHtml(p.status||'unknown')}</span>`;
+      return `
+        <a class="card" href="${url}">
+          <div class="card-header">
+            ${hasRisk
+              ? `<div class="risk-ring risk-ring-${rc}" title="Risk ${p.risk_score}/10">${p.risk_score}</div>`
+              : `<div class="risk-ring" style="background:var(--surface-2);color:var(--text-muted)">—</div>`}
+            <div style="flex:1;min-width:0">
+              <div class="card-title">${escHtml(p.goal_summary || p.project_id)}</div>
+              <div class="card-pills">
+                <span class="wf-pill">${wfLabel(p.workflow_type)}</span>
+                ${hasRisk ? `<span class="badge badge-${rc}">${rcLabel} risk</span>` : ''}
+                ${p.files_affected ? `<span class="badge badge-gray">${p.files_affected} files</span>` : ''}
+                ${p.rules_extracted ? `<span class="badge badge-blue">${p.rules_extracted} rules</span>` : ''}
+                ${p.duplicates_found ? `<span class="badge badge-medium">${p.duplicates_found} dupes</span>` : ''}
+                ${statusDot}
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="card-meta-item">${iconFolder}&nbsp;${escHtml(p.project_id)}</span>
+            <span class="card-meta-item">${iconCal}&nbsp;${formatDate(p.date)}</span>
+            ${p.hours_saved_estimate ? `<span class="card-meta-item" style="color:var(--success)">⏱ ${escHtml(p.hours_saved_estimate)}h saved</span>` : ''}
+            <span class="card-cta">View results ${iconArrow}</span>
+          </div>
+        </a>`;
+    }).join('');
+  }
+
+  async function init() {
+    try {
+      const res = await fetch(INDEX_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      renderProjects(await res.json());
+    } catch (err) {
+      document.getElementById('project-list').innerHTML = `
+        <div class="no-projects">
+          <h2>Could not load projects</h2>
+          <p>${escHtml(err.message)}</p>
+          <p style="margin-top:10px;font-size:0.82rem;color:var(--text-muted)">
+            Serve from a local server — e.g. <code>python server.py</code> or <code>npx serve dashboard/</code>.
+          </p>
+        </div>`;
+    }
+  }
+
+  window.reloadProjectList = init;
+  init();
+</script>
+</body>
+</html>

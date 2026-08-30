@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegacyFlow Orchestrator — IBM i Modernization Intelligence</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    /* ── Landing-page-only styles ─────────────────────────── */
+    .hero {
+      padding: 56px 0 48px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--accent);
+      background: var(--accent-dim); border: 1px solid rgba(0,98,255,0.2);
+      border-radius: 20px; padding: 4px 12px; margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700; letter-spacing: -0.04em;
+      color: var(--text); line-height: 1.15; margin-bottom: 20px;
+      max-width: 700px;
+    }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero-lead {
+      font-size: 1.05rem; color: var(--text-secondary);
+      line-height: 1.7; max-width: 600px; margin-bottom: 32px;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(3, auto);
+      gap: 32px; margin-top: 48px; padding-top: 32px;
+      border-top: 1px solid var(--border); width: fit-content;
+    }
+    .hero-stat-val {
+      font-size: 2rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.04em; line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 0.75rem; color: var(--text-muted);
+      margin-top: 4px; line-height: 1.4;
+    }
+
+    /* Value props */
+    .vp-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px; margin-bottom: 48px;
+    }
+    .vp-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 24px;
+    }
+    .vp-icon {
+      width: 40px; height: 40px; border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; margin-bottom: 14px; flex-shrink: 0;
+    }
+    .vp-icon-blue   { background: var(--accent-dim); }
+    .vp-icon-green  { background: var(--success-dim); }
+    .vp-icon-purple { background: var(--purple-dim); }
+    .vp-icon-amber  { background: var(--warn-dim); }
+    .vp-title { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .vp-body  { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65; }
+
+    /* Demo callout */
+    .demo-callout {
+      background: #161616; border-radius: var(--radius-lg);
+      padding: 32px 36px; margin-bottom: 48px;
+      display: flex; align-items: flex-start; gap: 32px; flex-wrap: wrap;
+    }
+    .demo-callout-text { flex: 1; min-width: 240px; }
+    .demo-callout-title {
+      font-size: 1.1rem; font-weight: 700; color: #f4f4f4;
+      margin-bottom: 8px; letter-spacing: -0.02em;
+    }
+    .demo-callout-body { font-size: 0.875rem; color: #a8a8a8; line-height: 1.65; }
+    .demo-callout-metrics {
+      display: flex; gap: 28px; flex-wrap: wrap; align-items: center;
+    }
+    .dcm { text-align: center; }
+    .dcm-val { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.03em; color: #f4f4f4; line-height: 1; }
+    .dcm-val.blue   { color: #74b3ff; }
+    .dcm-val.green  { color: #42be65; }
+    .dcm-val.red    { color: #fa4d56; }
+    .dcm-val.amber  { color: #f1c21b; }
+    .dcm-label { font-size: 0.68rem; color: #6f6f6f; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+
+    /* Workflow diagram */
+    .flow-steps {
+      display: flex; align-items: flex-start; gap: 0;
+      margin-bottom: 48px; overflow-x: auto;
+    }
+    .flow-step {
+      flex: 1; min-width: 120px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+    .flow-step-circle {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 700; margin-bottom: 10px;
+      position: relative; z-index: 1;
+    }
+    .flow-step-num { font-size: 0.7rem; font-weight: 700; color: var(--accent); }
+    .flow-connector {
+      flex: 1; height: 2px; background: var(--border);
+      margin-top: 24px; min-width: 24px;
+    }
+    .flow-step-label { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+    .flow-step-sub   { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+    .fsc-blue   { background: var(--accent-dim); border: 2px solid rgba(0,98,255,0.3); color: var(--accent); }
+    .fsc-purple { background: var(--purple-dim); border: 2px solid rgba(105,41,196,0.3); color: var(--purple); }
+    .fsc-green  { background: var(--success-dim); border: 2px solid var(--success-border); color: var(--success); }
+    .fsc-amber  { background: var(--warn-dim); border: 2px solid var(--warn-border); color: #7d5a00; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ── Sidebar ───────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <a class="sidebar-logo" href="index.html">
+      <div class="sidebar-logo-icon">LF</div>
+      <div class="sidebar-logo-text">
+        <div class="sidebar-logo-name">LegacyFlow</div>
+        <div class="sidebar-logo-sub">Orchestrator</div>
+      </div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a class="sidebar-link active" href="index.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M6.906.664a1.749 1.749 0 0 1 2.188 0l5.25 4.2c.415.332.657.835.656 1.366l-.002 7.17A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.401V6.23c0-.531.242-1.034.656-1.366L6.906.664Z"/></svg>
+        Home
+      </a>
+      <a class="sidebar-link sidebar-link-cta" href="orchestrate.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h4.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L9.293 7.5H4.5Z"/></svg>
+        Run Orchestration
+      </a>
+      <a class="sidebar-link" href="projects.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5L6.25 1.5h-4.5Z"/></svg>
+        Projects / Runs
+      </a>
+      <div class="sidebar-section">Analysis</div>
+      <a class="sidebar-link" href="projects.html?filter=impact-analysis">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 2.75a.25.25 0 0 1 .25-.25h12.5a.25.25 0 0 1 .25.25v10.5a.25.25 0 0 1-.25.25H1.75a.25.25 0 0 1-.25-.25ZM1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25V2.75A1.75 1.75 0 0 0 14.25 1ZM5 9a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm-.75-3.25a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H5a.75.75 0 0 1-.75-.75Z"/></svg>
+        Impact Analysis
+      </a>
+      <a class="sidebar-link" href="projects.html?filter=business-rules-extraction">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3.75 2h-.75v1.5h.75a.25.25 0 0 1 0 .5H3a.75.75 0 0 1 0-1.5h.75ZM3 5.25a.75.75 0 0 1 .75-.75h.75v1.5H3.75A.25.25 0 0 1 3.5 5.75V5.25ZM4.5 9h-.75a.75.75 0 0 0 0 1.5H4.5V9ZM6 2.75A.75.75 0 0 1 6.75 2h6.5A.75.75 0 0 1 14 2.75v10.5A.75.75 0 0 1 13.25 14h-6.5A.75.75 0 0 1 6 13.25ZM7.5 3.5v9h5v-9Z"/></svg>
+        Business Rules
+      </a>
+      <div class="sidebar-section">Learn</div>
+      <a class="sidebar-link" href="how-it-works.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>
+        How It Works
+      </a>
+      <a class="sidebar-link" href="about.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>
+        About the Tool
+      </a>
+      <a class="sidebar-link" href="demo-guide.html">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"/></svg>
+        Demo Guide
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <span class="sidebar-badge">IBM Bob 2.0</span>
+    </div>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────────────── -->
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <span class="current">Home</span>
+      </div>
+      <div class="topbar-actions">
+        <a href="projects.html" class="btn btn-sm btn-primary">View Projects</a>
+      </div>
+    </div>
+
+    <div class="page-body">
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-eyebrow">IBM Bob 2.0 Orchestration Engine</div>
+        <h1>Bob doesn't just assist — it <em>orchestrates</em></h1>
+        <p class="hero-lead">
+          LegacyFlow deploys IBM Bob 2.0 as a full orchestration engine: Plan mode creates a structured analysis plan,
+          parallel subagents execute concurrently, and structured outputs are written automatically —
+          turning weeks of manual IBM i discovery work into minutes.
+        </p>
+        <div class="hero-actions">
+          <a href="orchestrate.html" class="btn btn-primary btn-lg">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h4.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L9.293 7.5H4.5Z"/></svg>
+            Run Orchestration →
+          </a>
+          <a href="projects.html" class="btn btn-secondary btn-lg">View Projects</a>
+          <a href="how-it-works.html" class="btn btn-ghost btn-lg">How It Works</a>
+        </div>
+        <div class="hero-stats" id="hero-stats">
+          <div>
+            <div class="hero-stat-val" id="hs-projects">—</div>
+            <div class="hero-stat-label">Analysis runs completed</div>
+          </div>
+          <div>
+            <div class="hero-stat-val" id="hs-rules">—</div>
+            <div class="hero-stat-label">Business rules extracted</div>
+          </div>
+          <div>
+            <div class="hero-stat-val" id="hs-saved">—</div>
+            <div class="hero-stat-label">Hours saved vs. manual</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Value propositions -->
+      <div class="section-label">What LegacyFlow Does</div>
+      <div class="vp-grid">
+        <div class="vp-card">
+          <div class="vp-icon vp-icon-blue">🔍</div>
+          <div class="vp-title">Field Impact Analysis</div>
+          <div class="vp-body">Traces a target field across every RPG, CLLE, and copybook file in your codebase. Produces a complete reference map with read sites, write sites, and conditional branches — in minutes, not weeks.</div>
+        </div>
+        <div class="vp-card">
+          <div class="vp-icon vp-icon-green">📋</div>
+          <div class="vp-title">Business Rules Extraction</div>
+          <div class="vp-body">Surfaces implicit business logic buried in decades-old RPG source — validation rules, state transitions, threshold values, and duplicate rule patterns — presented as a structured, reviewable catalogue.</div>
+        </div>
+        <div class="vp-card">
+          <div class="vp-icon vp-icon-amber">⚖️</div>
+          <div class="vp-title">Risk Scoring</div>
+          <div class="vp-body">Quantifies change risk on a 1–10 scale using seven evidence-based factors: file spread, branching logic complexity, batch job involvement, shared copybook usage, and more.</div>
+        </div>
+        <div class="vp-card">
+          <div class="vp-icon vp-icon-purple">⏱</div>
+          <div class="vp-title">Effort Estimation</div>
+          <div class="vp-body">Compares estimated manual analysis hours against LegacyFlow-assisted hours, breaking down effort per file with reference-count breakdowns for constants, writes, reads, and conditional logic.</div>
+        </div>
+      </div>
+
+      <!-- Demo callout -->
+      <div class="demo-callout">
+        <div class="demo-callout-text">
+          <div class="demo-callout-title">Demo: CUST_STATUS field — Acme Distribution IBM i</div>
+          <div class="demo-callout-body">
+            A complete LegacyFlow run is pre-loaded. The target field is <code style="font-family:'IBM Plex Mono',monospace;background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:3px;color:#74b3ff">CUST_STATUS</code> across 6 RPG/CLLE source files
+            in the Acme Distribution sample codebase — the same kind of field found in every IBM i modernization project.
+          </div>
+        </div>
+        <div class="demo-callout-metrics" id="demo-metrics">
+          <div class="dcm"><div class="dcm-val red" id="dm-risk">9/10</div><div class="dcm-label">Risk Score</div></div>
+          <div class="dcm"><div class="dcm-val blue" id="dm-files">6</div><div class="dcm-label">Files Affected</div></div>
+          <div class="dcm"><div class="dcm-val blue" id="dm-refs">31</div><div class="dcm-label">Code References</div></div>
+          <div class="dcm"><div class="dcm-val amber" id="dm-rules">49</div><div class="dcm-label">Rules Extracted</div></div>
+          <div class="dcm"><div class="dcm-val green" id="dm-saved">120–180h</div><div class="dcm-label">Hours Saved</div></div>
+        </div>
+      </div>
+
+      <!-- How it works (condensed) -->
+      <div class="section-label">Orchestration Pipeline</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-circle fsc-blue">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M5.75 0a.75.75 0 0 0 0 1.5H8v1.75a.25.25 0 0 1-.25.25H3a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H8.25A1.75 1.75 0 0 0 6.5 1.75V1.5H5.75Z"/></svg>
+          </div>
+          <div class="flow-step-label">1. Input</div>
+          <div class="flow-step-sub">Field name + natural language goal</div>
+        </div>
+        <div class="flow-connector"></div>
+        <div class="flow-step">
+          <div class="flow-step-circle fsc-purple">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Z"/></svg>
+          </div>
+          <div class="flow-step-label">2. Plan Mode</div>
+          <div class="flow-step-sub">Bob reads codebase &amp; creates structured plan</div>
+        </div>
+        <div class="flow-connector"></div>
+        <div class="flow-step">
+          <div class="flow-step-circle fsc-amber">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0 0-13Z"/></svg>
+          </div>
+          <div class="flow-step-label">3. Approval Gate</div>
+          <div class="flow-step-sub">Human reviews plan — bypassed by --yolo in demo</div>
+        </div>
+        <div class="flow-connector"></div>
+        <div class="flow-step">
+          <div class="flow-step-circle fsc-blue">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0 0-13Z"/></svg>
+          </div>
+          <div class="flow-step-label">4. Parallel Agents</div>
+          <div class="flow-step-sub">2 concurrent subagents: Impact Analysis + Rules Extraction</div>
+        </div>
+        <div class="flow-connector"></div>
+        <div class="flow-step">
+          <div class="flow-step-circle fsc-green">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0 0-13ZM6.035 11.81 4.22 8.828a.75.75 0 0 1 1.3-.75L7 10.25l3.22-5.13a.75.75 0 1 1 1.28.8l-3.75 5.99a.75.75 0 0 1-1.215.12Z"/></svg>
+          </div>
+          <div class="flow-step-label">5. Outputs</div>
+          <div class="flow-step-sub">6 structured files written to project directory</div>
+        </div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:48px">
+        <a href="how-it-works.html" style="color:var(--accent)">Read the full technical walkthrough →</a>
+        &nbsp;&middot;&nbsp;
+        <a href="orchestrate.html" style="color:var(--accent)">Run your own orchestration →</a>
+      </p>
+
+      <!-- CTA -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:4px">Ready to run your own orchestration?</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary)">Or explore the pre-loaded CUST_STATUS demo — Risk 9/10, 49 rules, 120–180h saved.</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="orchestrate.html" class="btn btn-primary">Run Orchestration →</a>
+          <a href="projects.html" class="btn btn-secondary">View Projects</a>
+          <a href="demo-guide.html" class="btn btn-ghost" style="background:transparent;color:var(--text-secondary);border:1px solid var(--border)">Demo Guide</a>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="site-footer">
+      Made with IBM Bob 2.0 &mdash; LegacyFlow Orchestrator &mdash; IBM i Modernization Intelligence
+    </footer>
+  </div><!-- .main-content -->
+</div><!-- .app-shell -->
+
+<script>
+  // Dynamically load hero stats from projects-index
+  fetch('projects-index.json')
+    .then(r => r.ok ? r.json() : [])
+    .then(projects => {
+      const total  = projects.length;
+      const rules  = projects.reduce((s,p) => s + (p.rules_extracted || 0), 0);
+      const saved  = projects.reduce((s,p) => {
+        const v = String(p.hours_saved_estimate || '').split('-')[0].trim();
+        return s + (parseInt(v, 10) || 0);
+      }, 0);
+      const el = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+      el('hs-projects', total || '—');
+      el('hs-rules',    rules  || '—');
+      el('hs-saved',    saved  ? saved + '+h' : '—');
+      // Update demo callout from actual data if available
+      const p = projects.find(x => x.project_id === '20260829-demo-cust-status');
+      if (p) {
+        el('dm-risk',  (p.risk_score || '?') + '/10');
+        el('dm-files', p.files_affected || '—');
+        el('dm-refs',  p.reference_count || '—');
+        el('dm-rules', p.rules_extracted || '—');
+        el('dm-saved', (p.hours_saved_estimate || '—') + 'h');
+      }
+    }).catch(() => {});
+</script>
+
+</body>
+</html>

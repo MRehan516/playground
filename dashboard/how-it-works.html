@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegacyFlow — How It Works</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    .hiw-section { margin-bottom: 48px; }
+    .phase-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 24px 28px; margin-bottom: 12px;
+      display: grid; grid-template-columns: 48px 1fr; gap: 20px; align-items: flex-start;
+    }
+    .phase-num {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; font-weight: 700; flex-shrink: 0;
+    }
+    .phase-num-1 { background: var(--purple-dim); color: var(--purple); border: 2px solid rgba(105,41,196,0.3); }
+    .phase-num-2 { background: rgba(241,194,27,0.18); color: #7d5a00; border: 2px solid rgba(241,194,27,0.5); }
+    .phase-num-3 { background: var(--accent-dim); color: var(--accent); border: 2px solid rgba(0,98,255,0.3); }
+    .phase-num-4 { background: var(--success-dim); color: var(--success); border: 2px solid var(--success-border); }
+    .phase-title { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .phase-body  { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.7; }
+    .phase-body code { font-family: "IBM Plex Mono", monospace; background: var(--surface-2); border: 1px solid var(--border); border-radius: 2px; padding: 1px 5px; font-size: 0.85em; color: var(--accent); }
+    .phase-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+      padding: 2px 7px; border-radius: 3px; margin-bottom: 8px;
+    }
+    .output-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 16px; }
+    .output-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px;
+    }
+    .output-item-name { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; color: var(--accent); font-weight: 500; margin-bottom: 4px; }
+    .output-item-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+    .arch-diagram {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px; margin: 20px 0; text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="sidebar-logo" href="index.html">
+      <div class="sidebar-logo-icon">LF</div>
+      <div class="sidebar-logo-text"><div class="sidebar-logo-name">LegacyFlow</div><div class="sidebar-logo-sub">Orchestrator</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a class="sidebar-link" href="index.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M6.906.664a1.749 1.749 0 0 1 2.188 0l5.25 4.2c.415.332.657.835.656 1.366l-.002 7.17A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.401V6.23c0-.531.242-1.034.656-1.366L6.906.664Z"/></svg>Home</a>
+      <a class="sidebar-link sidebar-link-cta" href="orchestrate.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h4.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L9.293 7.5H4.5Z"/></svg>Run Orchestration</a>
+      <a class="sidebar-link" href="projects.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5L6.25 1.5h-4.5Z"/></svg>Projects / Runs</a>
+      <div class="sidebar-section">Analysis</div>
+      <a class="sidebar-link" href="projects.html?filter=impact-analysis"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 2.75a.25.25 0 0 1 .25-.25h12.5a.25.25 0 0 1 .25.25v10.5a.25.25 0 0 1-.25.25H1.75a.25.25 0 0 1-.25-.25ZM1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25V2.75A1.75 1.75 0 0 0 14.25 1ZM5 9a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm-.75-3.25a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H5a.75.75 0 0 1-.75-.75Z"/></svg>Impact Analysis</a>
+      <a class="sidebar-link" href="projects.html?filter=business-rules-extraction"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3.75 2h-.75v1.5h.75a.25.25 0 0 1 0 .5H3a.75.75 0 0 1 0-1.5h.75ZM3 5.25a.75.75 0 0 1 .75-.75h.75v1.5H3.75A.25.25 0 0 1 3.5 5.75V5.25ZM4.5 9h-.75a.75.75 0 0 0 0 1.5H4.5V9ZM6 2.75A.75.75 0 0 1 6.75 2h6.5A.75.75 0 0 1 14 2.75v10.5A.75.75 0 0 1 13.25 14h-6.5A.75.75 0 0 1 6 13.25ZM7.5 3.5v9h5v-9Z"/></svg>Business Rules</a>
+      <div class="sidebar-section">Learn</div>
+      <a class="sidebar-link active" href="how-it-works.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>How It Works</a>
+      <a class="sidebar-link" href="about.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>About the Tool</a>
+      <a class="sidebar-link" href="demo-guide.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"/></svg>Demo Guide</a>
+    </nav>
+    <div class="sidebar-footer"><span class="sidebar-badge">IBM Bob 2.0</span></div>
+  </aside>
+
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <a href="index.html">LegacyFlow</a><span class="sep">/</span>
+        <span class="current">How It Works</span>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="page-title">How It Works</div>
+      <p class="page-subtitle" style="margin-bottom:40px">
+        LegacyFlow Orchestrator uses IBM Bob 2.0 as a full <strong>orchestration engine</strong> — not just a coding assistant.
+        Plan mode creates a structured plan with a human approval gate. The <code style="font-family:'IBM Plex Mono',monospace;font-size:0.85em">--yolo</code> flag
+        bypasses the gate for automated demo runs. Parallel subagents execute concurrently and structured outputs are written automatically.
+      </p>
+
+      <!-- Architecture diagram -->
+      <div class="section-label">System Architecture</div>
+      <div class="arch-diagram">
+        <svg xmlns="http://www.w3.org/2000/svg" width="680" height="180" viewBox="0 0 680 180" font-family="IBM Plex Sans, sans-serif" font-size="12">
+          <!-- User -->
+          <rect x="10" y="65" width="90" height="50" rx="4" fill="#f4f4f4" stroke="#e0e0e0" stroke-width="1.5"/>
+          <text x="55" y="87" text-anchor="middle" font-weight="600" fill="#161616">User</text>
+          <text x="55" y="103" text-anchor="middle" font-size="10" fill="#525252">field + codebase</text>
+          <!-- Arrow -->
+          <line x1="100" y1="90" x2="135" y2="90" stroke="#8d8d8d" stroke-width="1.5" marker-end="url(#a)"/>
+          <!-- Flask -->
+          <rect x="135" y="58" width="100" height="64" rx="4" fill="#f4f4f4" stroke="#e0e0e0" stroke-width="1.5"/>
+          <text x="185" y="83" text-anchor="middle" font-weight="600" fill="#161616">server.py</text>
+          <text x="185" y="98" text-anchor="middle" font-size="10" fill="#525252">Flask API</text>
+          <text x="185" y="112" text-anchor="middle" font-size="10" fill="#8d8d8d">validates + spawns</text>
+          <!-- Arrow -->
+          <line x1="235" y1="90" x2="270" y2="90" stroke="#8d8d8d" stroke-width="1.5" marker-end="url(#a)"/>
+          <!-- Bob Plan -->
+          <rect x="270" y="58" width="100" height="64" rx="4" fill="rgba(105,41,196,0.08)" stroke="rgba(105,41,196,0.3)" stroke-width="1.5"/>
+          <text x="320" y="83" text-anchor="middle" font-weight="600" fill="#6929c4">Bob</text>
+          <text x="320" y="98" text-anchor="middle" font-size="10" fill="#525252">Plan mode</text>
+          <text x="320" y="112" text-anchor="middle" font-size="10" fill="#8d8d8d">--yolo (auto-approve)</text>
+          <!-- Fork arrows -->
+          <line x1="370" y1="78" x2="410" y2="45" stroke="#8d8d8d" stroke-width="1.5" marker-end="url(#a)"/>
+          <line x1="370" y1="103" x2="410" y2="135" stroke="#8d8d8d" stroke-width="1.5" marker-end="url(#a)"/>
+          <text x="390" y="92" font-size="10" fill="#8d8d8d" text-anchor="middle">parallel</text>
+          <!-- Impact Agent -->
+          <rect x="410" y="18" width="120" height="54" rx="4" fill="rgba(0,98,255,0.08)" stroke="rgba(0,98,255,0.3)" stroke-width="1.5"/>
+          <text x="470" y="38" text-anchor="middle" font-weight="600" fill="#0062ff">Agent 1</text>
+          <text x="470" y="53" text-anchor="middle" font-size="10" fill="#525252">Impact Analysis</text>
+          <text x="470" y="66" text-anchor="middle" font-size="10" fill="#8d8d8d">impact-report.md</text>
+          <!-- Rules Agent -->
+          <rect x="410" y="108" width="120" height="54" rx="4" fill="rgba(0,98,255,0.08)" stroke="rgba(0,98,255,0.3)" stroke-width="1.5"/>
+          <text x="470" y="128" text-anchor="middle" font-weight="600" fill="#0062ff">Agent 2</text>
+          <text x="470" y="143" text-anchor="middle" font-size="10" fill="#525252">Rules Extraction</text>
+          <text x="470" y="156" text-anchor="middle" font-size="10" fill="#8d8d8d">business-rules.md</text>
+          <!-- Merge arrow -->
+          <line x1="530" y1="45" x2="570" y2="78" stroke="#8d8d8d" stroke-width="1.5" marker-end="url(#a)"/>
+          <line x1="530" y1="135" x2="570" y2="103" stroke="#8d8d8d" stroke-width="1.5" marker-end="url(#a)"/>
+          <!-- Outputs -->
+          <rect x="570" y="58" width="100" height="64" rx="4" fill="rgba(25,128,56,0.08)" stroke="rgba(25,128,56,0.28)" stroke-width="1.5"/>
+          <text x="620" y="83" text-anchor="middle" font-weight="600" fill="#198038">Outputs</text>
+          <text x="620" y="98" text-anchor="middle" font-size="10" fill="#525252">6 structured files</text>
+          <text x="620" y="112" text-anchor="middle" font-size="10" fill="#8d8d8d">Dashboard-ready</text>
+          <defs>
+            <marker id="a" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
+              <polygon points="0 0,6 2.5,0 5" fill="#8d8d8d"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- Phases -->
+      <div class="section-label" style="margin-top:40px">5-Stage Orchestration Pipeline</div>
+
+      <!-- Stage 1 -->
+      <div class="phase-card">
+        <div class="phase-num phase-num-1">1</div>
+        <div>
+          <div class="phase-tag tl-phase-plan">Bob Plan mode</div>
+          <div class="phase-title">Plan Phase — Bob reads the codebase and creates a structured execution plan</div>
+          <div class="phase-body">
+            Bob is invoked with <code>bob -p .legacyflow/project-template/ --yolo</code>. In Plan mode, Bob reads
+            <code>INSTRUCTIONS.md</code> and scans the codebase structure, then produces a detailed execution plan
+            listing which files to analyse, which patterns to search for, what output files to write, and in what order.
+            This plan is visible in the <strong>Plan tab</strong> of the Results Viewer for full transparency.
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 2 — Approval Gate callout -->
+      <div class="phase-card" style="border-color:var(--warn-border);background:var(--warn-dim)">
+        <div class="phase-num phase-num-2">2</div>
+        <div>
+          <div class="phase-tag" style="background:rgba(241,194,27,0.28);color:#7d5a00;border:1px solid rgba(241,194,27,0.5)">🔐 Approval Gate</div>
+          <div class="phase-title">Human Approval Gate — The governance checkpoint before any execution</div>
+          <div class="phase-body">
+            Bob's Plan mode is designed to pause here and present the plan to a human before executing.
+            This is the <strong>governance and safety checkpoint</strong>: a reviewer can inspect the proposed actions,
+            reject the plan, or approve it. In production use, this gate provides auditability and change control
+            — no automated tool writes to your codebase without a human sign-off.
+            <br><br>
+            <strong>In LegacyFlow's demo mode</strong>, the <code>--yolo</code> flag bypasses this gate, allowing fully automated runs.
+            This is safe here because all codebase access is <em>read-only</em> — the only writes are structured output files
+            in the isolated project directory. The plan is still written to <code>plan.md</code> for auditability.
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="phase-card">
+        <div class="phase-num phase-num-3" style="background:var(--accent-dim);color:var(--accent);border-color:rgba(0,98,255,0.3)">3</div>
+        <div>
+          <div class="phase-tag tl-phase-explore">Parallel subagents</div>
+          <div class="phase-title">Parallel Subagents — Two Bob agents execute concurrently</div>
+          <div class="phase-body">
+            Bob spawns two independent subagents via <code>spawn_subagent</code>.
+            <br><br>
+            <strong>Agent 1 — Impact Analysis skill:</strong> Traces the target field across every RPG, CLLE, and copybook file.
+            Counts read sites, write sites, conditional branches, batch job references, and shared copybook definitions.
+            Produces a call chain diagram and a complete reference breakdown per file.
+            <br><br>
+            <strong>Agent 2 — Business Rules Extraction skill:</strong> Reads source code semantically to catalogue
+            validation rules, state transitions, threshold constants, and guard clauses. Detects duplicate rule implementations
+            across files and flags them for consolidation.
+            <br><br>
+            Both agents work simultaneously in their own isolated contexts, reducing total runtime by approximately 50% vs. sequential execution.
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 4 -->
+      <div class="phase-card">
+        <div class="phase-num phase-num-3">4</div>
+        <div>
+          <div class="phase-tag tl-phase-synthesis">Synthesis</div>
+          <div class="phase-title">Risk Scoring &amp; Effort Estimation — Cross-agent synthesis</div>
+          <div class="phase-body">
+            After both agents complete, Bob synthesises the results. Risk score (1–10) is computed across <strong>seven evidence-based factors</strong>:
+            <br><br>
+            <em>+Complexity</em>: Files referencing field &nbsp;·&nbsp; Branching logic count &nbsp;·&nbsp; Write site count
+            &nbsp;·&nbsp; Batch job involvement &nbsp;·&nbsp; Shared copybook definition &nbsp;·&nbsp; Duplicate rule count<br>
+            <em>−Deduction</em>: Centralised validation exists (reduces score — this is the "good news" factor)
+            <br><br>
+            Bob then calculates effort per file — manual analysis hours vs. LegacyFlow-assisted hours — with a reference-count
+            breakdown for constants, writes, reads, and conditional logic per file.
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 5 -->
+      <div class="phase-card">
+        <div class="phase-num phase-num-4">5</div>
+        <div>
+          <div class="phase-tag tl-phase-output">Structured output</div>
+          <div class="phase-title">Output Files — Written to the project directory, immediately dashboard-ready</div>
+          <div class="phase-body">All 6 outputs land in <code>.legacyflow/projects/&lt;project-id&gt;/</code> and are immediately viewable in the Results Viewer.</div>
+          <div class="output-grid">
+            <div class="output-item"><div class="output-item-name">impact-report.md</div><div class="output-item-desc">Full field reference map, call chain diagram, change recommendations</div></div>
+            <div class="output-item"><div class="output-item-name">business-rules.md</div><div class="output-item-desc">Extracted rules catalogue, state machine diagram, rule table</div></div>
+            <div class="output-item"><div class="output-item-name">risk-score.json</div><div class="output-item-desc">Machine-readable score with per-factor breakdown and rationale</div></div>
+            <div class="output-item"><div class="output-item-name">effort-estimate.json</div><div class="output-item-desc">Hours with/without tooling, file-by-file reference counts</div></div>
+            <div class="output-item"><div class="output-item-name">plan.md</div><div class="output-item-desc">Bob's execution plan — the approval gate document</div></div>
+            <div class="output-item"><div class="output-item-name">audit-trail.md</div><div class="output-item-desc">Complete log of every phase, decision, and action taken</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why the approval gate matters -->
+      <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="padding:20px 24px;background:var(--accent-dim);border:1px solid rgba(0,98,255,0.2);border-radius:var(--radius-lg);">
+          <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Why the approval gate exists</div>
+          <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.65">
+            In enterprise modernization projects, governance is non-negotiable. The approval gate means an engineer reviews
+            exactly what actions Bob will take before any execution occurs. It creates a clear audit trail and prevents
+            unintended side effects — the same reason code review exists.
+          </div>
+        </div>
+        <div style="padding:20px 24px;background:rgba(241,194,27,0.1);border:1px solid rgba(241,194,27,0.4);border-radius:var(--radius-lg);">
+          <div style="font-size:0.82rem;font-weight:700;color:#7d5a00;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">--yolo in the demo</div>
+          <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.65">
+            <code style="font-family:'IBM Plex Mono',monospace;background:var(--surface-2);border:1px solid var(--border);border-radius:2px;padding:1px 4px;font-size:0.85em;color:var(--accent)">--yolo</code>
+            is an IBM Bob 2.0 flag that auto-approves the Plan mode gate. It's appropriate here because
+            the INSTRUCTIONS.md is carefully authored so the plan is deterministic and safe — all codebase access is read-only.
+            LegacyFlow uses it intentionally; a production deployment would require human approval.
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px;text-align:right">
+        <a href="orchestrate.html" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:6px">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h4.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L9.293 7.5H4.5Z"/></svg>
+          Try it — Run Orchestration →
+        </a>
+      </div>
+
+    </div>
+    <footer class="site-footer">Made with IBM Bob 2.0 &mdash; LegacyFlow Orchestrator</footer>
+  </div>
+</div>
+</body>
+</html>

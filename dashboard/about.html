@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegacyFlow — About the Tool</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+    @media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; } }
+    .about-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 24px; }
+    .about-card-title { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .about-card-body { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; }
+    .tech-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.85rem; }
+    .tech-row:last-child { border-bottom: none; }
+    .tech-name { font-family: "IBM Plex Mono", monospace; color: var(--accent); font-weight: 500; min-width: 200px; }
+    .tech-desc { color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="sidebar-logo" href="index.html">
+      <div class="sidebar-logo-icon">LF</div>
+      <div class="sidebar-logo-text"><div class="sidebar-logo-name">LegacyFlow</div><div class="sidebar-logo-sub">Orchestrator</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a class="sidebar-link" href="index.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M6.906.664a1.749 1.749 0 0 1 2.188 0l5.25 4.2c.415.332.657.835.656 1.366l-.002 7.17A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.401V6.23c0-.531.242-1.034.656-1.366L6.906.664Z"/></svg>Home</a>
+      <a class="sidebar-link sidebar-link-cta" href="orchestrate.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h4.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L9.293 7.5H4.5Z"/></svg>Run Orchestration</a>
+      <a class="sidebar-link" href="projects.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5L6.25 1.5h-4.5Z"/></svg>Projects / Runs</a>
+      <div class="sidebar-section">Analysis</div>
+      <a class="sidebar-link" href="projects.html?filter=impact-analysis"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 2.75a.25.25 0 0 1 .25-.25h12.5a.25.25 0 0 1 .25.25v10.5a.25.25 0 0 1-.25.25H1.75a.25.25 0 0 1-.25-.25ZM1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25V2.75A1.75 1.75 0 0 0 14.25 1ZM5 9a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm-.75-3.25a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H5a.75.75 0 0 1-.75-.75Z"/></svg>Impact Analysis</a>
+      <a class="sidebar-link" href="projects.html?filter=business-rules-extraction"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3.75 2h-.75v1.5h.75a.25.25 0 0 1 0 .5H3a.75.75 0 0 1 0-1.5h.75ZM3 5.25a.75.75 0 0 1 .75-.75h.75v1.5H3.75A.25.25 0 0 1 3.5 5.75V5.25ZM4.5 9h-.75a.75.75 0 0 0 0 1.5H4.5V9ZM6 2.75A.75.75 0 0 1 6.75 2h6.5A.75.75 0 0 1 14 2.75v10.5A.75.75 0 0 1 13.25 14h-6.5A.75.75 0 0 1 6 13.25ZM7.5 3.5v9h5v-9Z"/></svg>Business Rules</a>
+      <div class="sidebar-section">Learn</div>
+      <a class="sidebar-link" href="how-it-works.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>How It Works</a>
+      <a class="sidebar-link active" href="about.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>About the Tool</a>
+      <a class="sidebar-link" href="demo-guide.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"/></svg>Demo Guide</a>
+    </nav>
+    <div class="sidebar-footer"><span class="sidebar-badge">IBM Bob 2.0</span></div>
+  </aside>
+
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <a href="index.html">LegacyFlow</a><span class="sep">/</span>
+        <span class="current">About</span>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="page-title">About LegacyFlow Orchestrator</div>
+      <p class="page-subtitle" style="margin-bottom:40px">
+        A proof-of-concept IBM Bob 2.0 application demonstrating AI-driven intelligence for IBM i / RPG modernization teams.
+      </p>
+
+      <div class="section-label">What It Solves</div>
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-card-title">The Problem</div>
+          <div class="about-card-body">
+            IBM i modernization projects routinely stall during the initial discovery phase. Before any code can be safely changed,
+            teams must manually trace field usage across hundreds of RPG, CLLE, and copybook files — a task that takes experienced
+            developers weeks to complete and is highly error-prone. Business rules buried in inline conditionals are routinely missed,
+            leading to defects introduced during modernization.
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-title">The Solution</div>
+          <div class="about-card-body">
+            LegacyFlow automates discovery entirely. By deploying IBM Bob 2.0 as an orchestration engine with two parallel analysis
+            skills, the same work that took weeks now completes in minutes — producing structured, reviewable outputs that a team can
+            act on immediately. The risk score and effort estimate give managers the data they need to prioritise and resource the
+            modernization work correctly.
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Key Capabilities</div>
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-card-title">Impact Analysis Skill</div>
+          <div class="about-card-body">
+            Traces a named field across all source files. Identifies every read site, write site, conditional branch, constant definition,
+            and copybook inclusion. Produces a call chain diagram and a complete reference breakdown per file.
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-title">Business Rules Extraction Skill</div>
+          <div class="about-card-body">
+            Reads source code semantically to catalogue validation rules, state transition logic, threshold constants, and guard clauses.
+            Detects duplicate rule implementations across files and flags them for consolidation.
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-title">Risk Scoring Engine</div>
+          <div class="about-card-body">
+            Computes a 1–10 risk score using seven evidence-based factors. Each factor is scored individually, deductions are applied
+            for mitigating factors (e.g. centralised validation), and a human-readable rationale is produced alongside the number.
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-title">Effort Estimation</div>
+          <div class="about-card-body">
+            Produces side-by-side estimates: manual analysis hours vs. LegacyFlow-assisted hours, with a per-file reference count
+            breakdown so teams can identify which files will require the most attention.
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Technology Stack</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:4px 20px;margin-bottom:32px">
+        <div class="tech-row"><div class="tech-name">IBM Bob 2.0</div><div class="tech-desc">AI orchestration engine — Plan mode + parallel subagents</div></div>
+        <div class="tech-row"><div class="tech-name">Bob Skills (.bob/skills/)</div><div class="tech-desc">impact-analysis and business-rules-extraction skill definitions</div></div>
+        <div class="tech-row"><div class="tech-name">Python / Flask (server.py)</div><div class="tech-desc">Thin REST backend for live analysis trigger and status polling</div></div>
+        <div class="tech-row"><div class="tech-name">IBM Carbon Design System</div><div class="tech-desc">Color tokens, typography, and spacing principles</div></div>
+        <div class="tech-row"><div class="tech-name">IBM Plex Sans / Mono</div><div class="tech-desc">Primary typefaces for UI text and code samples</div></div>
+        <div class="tech-row"><div class="tech-name">marked.js (CDN)</div><div class="tech-desc">Markdown rendering for impact reports and business rules</div></div>
+        <div class="tech-row"><div class="tech-name">Vanilla HTML/CSS/JS</div><div class="tech-desc">No build step, no framework — pure static files</div></div>
+      </div>
+
+      <div class="section-label">Limitations &amp; Scope</div>
+      <div style="background:rgba(241,194,27,0.1);border:1px solid rgba(241,194,27,0.4);border-radius:var(--radius-lg);padding:16px 20px;font-size:0.875rem;color:var(--text-secondary);line-height:1.7">
+        LegacyFlow is a <strong style="color:var(--text)">proof of concept</strong> built for hackathon demonstration. The analysis quality
+        depends on the quality of the Bob skill instructions and the LLM's ability to read RPG source code semantically.
+        It is not a static analysis tool and does not parse source code with a grammar — it uses AI reasoning, which means
+        results should be treated as <strong style="color:var(--text)">AI-assisted intelligence</strong> requiring human review,
+        not as ground-truth automated output.
+      </div>
+
+    </div>
+    <footer class="site-footer">Made with IBM Bob 2.0 &mdash; LegacyFlow Orchestrator</footer>
+  </div>
+</div>
+</body>
+</html>

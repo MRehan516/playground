@@ -1,0 +1,27 @@
+{
+  "target_field": "CUST_STATUS",
+  "risk_score": 9,
+  "risk_band": "high",
+  "score_breakdown": {
+    "files_referencing_field": 6,
+    "drives_branching_logic": true,
+    "written_in_multiple_places": true,
+    "appears_in_batch_job": true,
+    "duplicated_rules": true,
+    "defined_in_shared_copybook": true,
+    "no_centralised_validation": false,
+    "centralised_validation_exists": true
+  },
+  "factor_detail": {
+    "files_referencing_field_score": 4,
+    "drives_branching_logic_score": 2,
+    "written_in_multiple_places_score": 1,
+    "appears_in_batch_job_score": 1,
+    "duplicated_rules_score": 1,
+    "defined_in_shared_copybook_score": 1,
+    "centralised_validation_exists_deduction": -1
+  },
+  "raw_score": 10,
+  "final_score": 9,
+  "score_rationale": "Raw score is 10 (4+2+1+1+1+1), reduced by 1 for the presence of the STATVLD centralised validation service program. Final score: 9/10 HIGH RISK. Six of seven files reference CUST_STATUS directly. The field drives a 4-state state machine with 12 transition rules, is written in two independent locations (CUSTMAST.rpg and ORDPROC.rpgle), and appears in both interactive and batch processing paths. The auto-suspension rule (balance > 110% of credit limit) is duplicated with inconsistent implementation style between CUSTMAST (inline) and ORDPROC (via STATVLD). Any change to CUST_STATUS requires coordinated testing of all six dependent programs."
+}

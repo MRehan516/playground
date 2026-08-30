@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegacyFlow — Demo Guide</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    .step-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+    .step {
+      display: grid; grid-template-columns: 36px 1fr; gap: 16px; align-items: flex-start;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 18px 20px;
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+    }
+    .step-title { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+    .step-body { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65; }
+    .step-body code { font-family: "IBM Plex Mono", monospace; background: var(--surface-2); border: 1px solid var(--border); border-radius: 2px; padding: 1px 5px; font-size: 0.85em; color: var(--accent); }
+    .step-body a { color: var(--accent); }
+    .callout-tip { background: var(--accent-dim); border: 1px solid rgba(0,98,255,0.2); border-radius: var(--radius-lg); padding: 14px 18px; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 32px; }
+    .callout-tip strong { color: var(--accent); }
+    .tab-preview { display: flex; flex-direction: column; gap: 8px; }
+    .tab-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+    .tab-dot-preview { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+    .tab-item-name { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .tab-item-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="sidebar-logo" href="index.html">
+      <div class="sidebar-logo-icon">LF</div>
+      <div class="sidebar-logo-text"><div class="sidebar-logo-name">LegacyFlow</div><div class="sidebar-logo-sub">Orchestrator</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a class="sidebar-link" href="index.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M6.906.664a1.749 1.749 0 0 1 2.188 0l5.25 4.2c.415.332.657.835.656 1.366l-.002 7.17A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.401V6.23c0-.531.242-1.034.656-1.366L6.906.664Z"/></svg>Home</a>
+      <a class="sidebar-link sidebar-link-cta" href="orchestrate.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h4.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L9.293 7.5H4.5Z"/></svg>Run Orchestration</a>
+      <a class="sidebar-link" href="projects.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5L6.25 1.5h-4.5Z"/></svg>Projects / Runs</a>
+      <div class="sidebar-section">Analysis</div>
+      <a class="sidebar-link" href="projects.html?filter=impact-analysis"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 2.75a.25.25 0 0 1 .25-.25h12.5a.25.25 0 0 1 .25.25v10.5a.25.25 0 0 1-.25.25H1.75a.25.25 0 0 1-.25-.25ZM1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25V2.75A1.75 1.75 0 0 0 14.25 1ZM5 9a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5Zm-.75-3.25a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H5a.75.75 0 0 1-.75-.75Z"/></svg>Impact Analysis</a>
+      <a class="sidebar-link" href="projects.html?filter=business-rules-extraction"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3.75 2h-.75v1.5h.75a.25.25 0 0 1 0 .5H3a.75.75 0 0 1 0-1.5h.75ZM3 5.25a.75.75 0 0 1 .75-.75h.75v1.5H3.75A.25.25 0 0 1 3.5 5.75V5.25ZM4.5 9h-.75a.75.75 0 0 0 0 1.5H4.5V9ZM6 2.75A.75.75 0 0 1 6.75 2h6.5A.75.75 0 0 1 14 2.75v10.5A.75.75 0 0 1 13.25 14h-6.5A.75.75 0 0 1 6 13.25ZM7.5 3.5v9h5v-9Z"/></svg>Business Rules</a>
+      <div class="sidebar-section">Learn</div>
+      <a class="sidebar-link" href="how-it-works.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>How It Works</a>
+      <a class="sidebar-link" href="about.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>About the Tool</a>
+      <a class="sidebar-link active" href="demo-guide.html"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"/></svg>Demo Guide</a>
+    </nav>
+    <div class="sidebar-footer"><span class="sidebar-badge">IBM Bob 2.0</span></div>
+  </aside>
+
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <a href="index.html">LegacyFlow</a><span class="sep">/</span>
+        <span class="current">Demo Guide</span>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="page-title">Demo Guide</div>
+      <p class="page-subtitle" style="margin-bottom:32px">
+        A step-by-step walkthrough for presenting LegacyFlow Orchestrator at a hackathon or customer demonstration.
+      </p>
+
+      <div class="callout-tip">
+        <strong>Pre-demo checklist:</strong> The demo project <code>20260829-demo-cust-status</code> is pre-loaded with all 6 output files.
+        For a static demo (no live run), just open <code>dashboard/index.html</code> in a browser — no server needed.
+        For a live run demo, start the Flask backend first with <code>python server.py</code> from the workspace root.
+      </div>
+
+      <div class="section-label">Static Demo Path (Recommended)</div>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Open the Home page</div>
+            <div class="step-body">Navigate to <code>dashboard/index.html</code>. Point out the hero section — the value proposition is clear: <em>"AI-driven intelligence for IBM i modernization."</em> The demo callout shows real numbers from the pre-loaded run: Risk 9/10, 6 files, 31 code references, 49 business rules, 120–180h saved.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Explain the sidebar navigation</div>
+            <div class="step-body">The persistent left sidebar shows this is a real internal tool, not a single page. Point out the sections: Main (Home, Projects), Analysis (Impact Analysis, Business Rules), Learn (How It Works, About, Demo Guide). This demonstrates that LegacyFlow is designed for ongoing team use, not just a one-off script.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Open the Projects page</div>
+            <div class="step-body">Click <strong>Projects / Runs</strong> in the sidebar. The stats bar shows aggregate metrics across all runs. The project card shows the risk badge (red ring with "9"), workflow type pill, files, rules count, and status badge. Click the card to open the viewer.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">Walk through the Results Viewer tabs</div>
+            <div class="step-body">The viewer has 6 tabs — walk through them in order:</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab preview -->
+      <div class="tab-preview" style="margin-bottom:40px">
+        <div class="tab-item">
+          <div class="tab-dot-preview" style="background:var(--accent)"></div>
+          <div><div class="tab-item-name">Summary tab</div><div class="tab-item-desc">Lead with this. Show the 6 metric cards: Risk Score (9/10 in red), Files Affected (5), Rules Extracted (49), Code References (31), Hours Saved, Est. Hours w/ Tool. The "Recommended Actions" section shows the first action highlighted in blue with a "Start here" label — this tells the team exactly what to do next. The Output Files section proves structured, usable artefacts were produced.</div></div>
+        </div>
+        <div class="tab-item">
+          <div class="tab-dot-preview" style="background:var(--purple)"></div>
+          <div><div class="tab-item-name">Impact Report tab</div><div class="tab-item-desc">Show the Call Chain SVG diagram — it visually demonstrates the system understood the program architecture. Point out the green STATVLD box (the authoritative validation API that already exists) and the dashed copybook inclusion lines. Then scroll down to the risk analysis and recommendations.</div></div>
+        </div>
+        <div class="tab-item">
+          <div class="tab-dot-preview" style="background:var(--success)"></div>
+          <div><div class="tab-item-name">Business Rules tab</div><div class="tab-item-desc">Show the State Machine SVG — 4 states, color-coded transitions, and the dashed red "✗ blocked" line showing the forbidden Active→Closed direct transition. This is a business rule Bob discovered by reading the source code. Scroll down to the rules catalogue table (49 rules).</div></div>
+        </div>
+        <div class="tab-item">
+          <div class="tab-dot-preview" style="background:var(--danger)"></div>
+          <div><div class="tab-item-name">Risk &amp; Effort tab</div><div class="tab-item-desc">Show the factor breakdown table with the CSS bar charts. The "Weight" column visually conveys which factors contributed most to the 9/10 score. Then show the per-file reference table with the "Refs" bar chart — CUSTMAST.rpg clearly has the most work to do.</div></div>
+        </div>
+        <div class="tab-item">
+          <div class="tab-dot-preview" style="background:#7d5a00"></div>
+          <div><div class="tab-item-name">Audit Trail tab</div><div class="tab-item-desc">Show the timeline view. This demonstrates transparency — every phase Bob executed is documented with bullets and key decisions. This is the kind of audit trail enterprise teams need for governance and sign-off.</div></div>
+        </div>
+      </div>
+
+      <div class="section-label">Live Run Demo Path (Flask Backend)</div>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Start the Flask backend</div>
+            <div class="step-body">From the workspace root: <code>python server.py</code>. The backend starts on <code>localhost:5000</code> and serves the dashboard at <code>http://localhost:5000/dashboard/</code>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">The Run Panel appears automatically</div>
+            <div class="step-body">When the Flask backend is running, a "Run new analysis" panel appears on the Projects page — populated with fields from the sample codebase (<code>CUSTCP.rpgleinc</code>). Select a field and click "Run Analysis". The panel shows a live progress timeline with animated phase steps.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Bob runs live</div>
+            <div class="step-body">The backend spawns <code>bob -p … --yolo</code> as a subprocess. The status endpoint polls every 2 seconds. When complete, the project card list automatically refreshes and a "View results" link appears in the progress panel.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout-tip">
+        <strong>Talking points:</strong> Emphasise that this is all running locally — there's no cloud dependency. The AI (IBM Bob 2.0) reads the actual source code, reasons about it, and writes structured outputs. The dashboard is entirely static HTML — no React, no build step, no dependencies beyond a CDN Markdown renderer. The whole system is transparent and auditable.
+      </div>
+
+    </div>
+    <footer class="site-footer">Made with IBM Bob 2.0 &mdash; LegacyFlow Orchestrator</footer>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,153 @@
+     H DFTACTGRP(*YES) ACTGRP(*CALLER)
+     H OPTION(*NODEBUGIO)
+      *----------------------------------------------------------------
+      * RPTGEN  -  Customer Status Report Generator
+      * Type:       Fixed-format OPM RPG/400
+      * Purpose:    Reads the customer master file and produces a
+      *             printed report of customers filtered by status.
+      *             Totals are broken down by region and status code.
+      *
+      *             Report is triggered nightly by JOBCTL.
+      *             Can also be run ad-hoc with a specific status filter.
+      *
+      * Files used:
+      *   CUSTMSTPF  - Customer master physical file (Input)
+      *   RPTPRTF    - Printer file for report output (Output)
+      *
+      * Parameters:
+      *   P_STATUS   - Status filter ('A', 'I', 'S', 'C', or '*ALL')
+      *----------------------------------------------------------------
+      *
+      * Entry parameter list
+      *
+     C     *ENTRY        PLIST
+     C                   PARM                    P_STATUS          1
+      *
+      * File Declarations
+      *
+     FCUSTMSTPF IF   E           K DISK
+     FRPTPRTF   O    E             PRINTER OFLIND(*IN01)
+      *
+      * Work fields
+      *
+     D P_STATUS        S              1A
+     D WK_REGION       S              3A
+     D WK_PREV_REG     S              3A
+     D CTR_ACTIVE      S              5P 0
+     D CTR_INACTIVE    S              5P 0
+     D CTR_SUSPENDED   S              5P 0
+     D CTR_CLOSED      S              5P 0
+     D CTR_TOTAL       S              5P 0
+     D TOT_CREDIT      S             13P 2
+     D TOT_BALANCE     S             13P 2
+      *
+      ****--------------------------------------------------------------
+      * Print report header
+      ****--------------------------------------------------------------
+     C                   EXSR      SR_HEADER
+      *
+      ****--------------------------------------------------------------
+      * Read customer master in region / ID sequence
+      ****--------------------------------------------------------------
+     C                   READ      CUSTMSTPF
+     C                   DOW       NOT *IN99
+      *
+      *   Apply status filter
+      *
+     C                   IF        P_STATUS <> '*' AND
+     C                             CUST_STATUS <> P_STATUS
+     C                   READ      CUSTMSTPF
+     C                   ITER
+     C                   END
+      *
+      *   Region break heading
+      *
+     C                   IF        CUST_REGION <> WK_PREV_REG
+     C                   IF        WK_PREV_REG <> *BLANK
+     C                   EXSR      SR_REG_TOT
+     C                   END
+     C                   EVAL      WK_PREV_REG = CUST_REGION
+     C                   EXSR      SR_REG_HDR
+     C                   END
+      *
+      *   Accumulate counters by status
+      *
+     C                   SELECT
+     C                   WHEN      CUST_STATUS = 'A'
+     C                   ADD       1             CTR_ACTIVE
+     C                   WHEN      CUST_STATUS = 'I'
+     C                   ADD       1             CTR_INACTIVE
+     C                   WHEN      CUST_STATUS = 'S'
+     C                   ADD       1             CTR_SUSPENDED
+     C                   WHEN      CUST_STATUS = 'C'
+     C                   ADD       1             CTR_CLOSED
+     C                   ENDSL
+      *
+     C                   ADD       1             CTR_TOTAL
+     C                   ADD       CUST_CREDIT_LMT  TOT_CREDIT
+     C                   ADD       CUST_BALANCE     TOT_BALANCE
+      *
+      *   Print detail line
+      *
+     C                   EXSR      SR_DETAIL
+      *
+     C                   READ      CUSTMSTPF
+     C                   ENDDO
+      *
+      *   Final region total and grand total
+      *
+     C                   IF        WK_PREV_REG <> *BLANK
+     C                   EXSR      SR_REG_TOT
+     C                   END
+     C                   EXSR      SR_GRAND_TOT
+      *
+     C                   SETON                                        LR
+     C                   RETURN
+      *
+      ****--------------------------------------------------------------
+      * SR_HEADER  -  Print report header lines
+      ****--------------------------------------------------------------
+     C     SR_HEADER     BEGSR
+     C                   WRITE     RPTHDR1
+     C                   WRITE     RPTHDR2
+     C                   IF        P_STATUS = '*'
+     C                   EVAL      WK_REGION = '*ALL'
+     C                   ELSE
+     C                   EVAL      WK_REGION = P_STATUS
+     C                   END
+     C                   ENDSR
+      *
+      ****--------------------------------------------------------------
+      * SR_REG_HDR  -  Print region sub-heading
+      ****--------------------------------------------------------------
+     C     SR_REG_HDR    BEGSR
+     C                   WRITE     RPTREGHD
+     C                   ENDSR
+      *
+      ****--------------------------------------------------------------
+      * SR_DETAIL  -  Print one customer detail line
+      ****--------------------------------------------------------------
+     C     SR_DETAIL     BEGSR
+      *
+      *   Flag suspended customers with an asterisk on the report
+      *
+     C                   IF        CUST_STATUS = 'S'
+     C                   WRITE     RPTDET_S
+     C                   ELSE
+     C                   WRITE     RPTDET
+     C                   END
+     C                   ENDSR
+      *
+      ****--------------------------------------------------------------
+      * SR_REG_TOT  -  Print region totals
+      ****--------------------------------------------------------------
+     C     SR_REG_TOT    BEGSR
+     C                   WRITE     RPTTOT
+     C                   ENDSR
+      *
+      ****--------------------------------------------------------------
+      * SR_GRAND_TOT  -  Print grand total line
+      ****--------------------------------------------------------------
+     C     SR_GRAND_TOT  BEGSR
+     C                   WRITE     RPTGRAND
+     C                   ENDSR

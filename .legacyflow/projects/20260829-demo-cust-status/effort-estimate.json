@@ -1,0 +1,31 @@
+{
+  "target_field": "CUST_STATUS",
+  "files_to_modify": 6,
+  "files_to_retest": 7,
+  "reference_count": 31,
+  "write_references": 2,
+  "duplicated_rule_count": 2,
+  "change_complexity": "complex",
+  "complexity_reason": "CUST_STATUS drives a 4-state state machine with 12 permitted transition rules enforced across multiple programs. The field is written in two independent locations (CUSTMAST.rpg SR_CHANGE and ORDPROC.rpgle post-order), both applying the same 110% auto-suspension threshold with different implementation patterns. Changing the field requires: (1) updating the copybook constant definitions, (2) reconciling duplicate auto-suspend logic between CUSTMAST and ORDPROC, (3) updating STATVLD service program procedures, (4) updating RPTGEN hardcoded literals, (5) regression testing all interactive and batch paths, and (6) regenerating any compiled bindings that reference the copybook.",
+  "reference_breakdown": {
+    "CUSTCP.rpgleinc": { "constant_definitions": 10, "write": 0, "read": 0, "conditional": 0 },
+    "CUSTMAST.rpg":    { "constant_definitions": 0,  "write": 2, "read": 2, "conditional": 8 },
+    "STATVLD.rpgle":   { "constant_definitions": 0,  "write": 0, "read": 0, "conditional": 25 },
+    "ORDPROC.rpgle":   { "constant_definitions": 0,  "write": 1, "read": 1, "conditional": 3 },
+    "CRDALERT.rpgle":  { "constant_definitions": 0,  "write": 0, "read": 0, "conditional": 3 },
+    "RPTGEN.rpg":      { "constant_definitions": 0,  "write": 0, "read": 0, "conditional": 6 },
+    "JOBCTL.clle":     { "constant_definitions": 0,  "write": 0, "read": 0, "conditional": 0 }
+  },
+  "estimated_hours_range": "40-60 hours",
+  "estimated_hours_without_tool": "160-240 hours",
+  "hours_saved_estimate": "120-180 hours",
+  "recommended_actions": [
+    "Before any change: consolidate the auto-suspension rule — CUSTMAST.rpg uses inline literal (1.10) while ORDPROC.rpgle delegates to STATVLD.ShouldAutoSuspend. Both should delegate to STATVLD.",
+    "Update CUSTCP.rpgleinc first — all ST_* constants and SUSPEND_THRESHOLD are the single source of truth; changing these propagates to all programs at compile time.",
+    "Add a new constant for any new status value in CUSTCP.rpgleinc before referencing it anywhere.",
+    "Update STATVLD.rpgle IsTransitionAllowed and IsStatusValid to reflect new state machine rules — this is the authoritative API.",
+    "Update RPTGEN.rpg: all four status comparisons use hardcoded literals ('A','I','S','C') instead of copybook constants — these must be updated manually and are a maintenance risk.",
+    "Run a full compile pass after updating CUSTCP.rpgleinc to surface all files that reference changed constants.",
+    "Regression test the complete JOBCTL.clle batch stream end-to-end after changes are applied."
+  ]
+}

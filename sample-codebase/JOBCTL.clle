@@ -1,0 +1,78 @@
+/* ---------------------------------------------------------------  */
+/* JOBCTL  -  Daily Customer Batch Job Controller                  */
+/* Type:       CL Program (ILE)                                    */
+/* Purpose:    Orchestrates the nightly batch job stream for       */
+/*             customer master processing.                          */
+/*             Sequence:                                            */
+/*               1. Validate system environment                    */
+/*               2. Run report generator for all statuses          */
+/*               3. Run report for suspended customers only        */
+/*               4. Run credit/status alert notifier               */
+/*               5. Send job completion notification               */
+/*                                                                  */
+/* Called by:  Job scheduler (WRKJOBSCDE entry: CUSTBATCH)        */
+/* Calls:      RPTGEN, CRDALERT                                    */
+/* --------------------------------------------------------------- */
+PGM
+
+DCL VAR(&JOBNAME)  TYPE(*CHAR) LEN(10)
+DCL VAR(&STATUS)   TYPE(*CHAR) LEN(1)
+DCL VAR(&MSGID)    TYPE(*CHAR) LEN(7)
+DCL VAR(&MSGDTA)   TYPE(*CHAR) LEN(100)
+DCL VAR(&ERRCOD)   TYPE(*CHAR) LEN(4) VALUE(X'00000000')
+
+/* Retrieve current job name for logging */
+RTVJOBA JOB(&JOBNAME)
+
+/* ---------------------------------------------------------------  */
+/* Step 1: Send start notification to QSYSOPR                      */
+/* ---------------------------------------------------------------  */
+SNDMSG MSG('CUSTBATCH started: ' *CAT &JOBNAME) +
+       TOUSR(QSYSOPR)
+
+/* ---------------------------------------------------------------  */
+/* Step 2: Run full customer status report (all statuses)           */
+/*         RPTGEN parameter: '*' = all statuses                     */
+/* ---------------------------------------------------------------  */
+CALL PGM(RPTGEN) PARM('*')
+
+MONMSG MSGID(CPF0000) EXEC(DO)
+  CHGVAR VAR(&MSGDTA) VALUE('RPTGEN (*ALL) failed')
+  GOTO CMDLBL(ERROR)
+ENDDO
+
+/* ---------------------------------------------------------------  */
+/* Step 3: Run suspended-only report for management review          */
+/*         RPTGEN parameter: 'S' = Suspended only                  */
+/* ---------------------------------------------------------------  */
+CALL PGM(RPTGEN) PARM('S')
+
+MONMSG MSGID(CPF0000) EXEC(DO)
+  CHGVAR VAR(&MSGDTA) VALUE('RPTGEN (S) failed')
+  GOTO CMDLBL(ERROR)
+ENDDO
+
+/* ---------------------------------------------------------------  */
+/* Step 4: Run credit and status alert notifier                     */
+/* ---------------------------------------------------------------  */
+CALL PGM(CRDALERT)
+
+MONMSG MSGID(CPF0000) EXEC(DO)
+  CHGVAR VAR(&MSGDTA) VALUE('CRDALERT failed')
+  GOTO CMDLBL(ERROR)
+ENDDO
+
+/* ---------------------------------------------------------------  */
+/* Step 5: Normal completion                                         */
+/* ---------------------------------------------------------------  */
+SNDMSG MSG('CUSTBATCH completed normally: ' *CAT &JOBNAME) +
+       TOUSR(QSYSOPR)
+RETURN
+
+/* ---------------------------------------------------------------  */
+/* Error handler                                                     */
+/* ---------------------------------------------------------------  */
+ERROR:
+SNDMSG MSG('CUSTBATCH ERROR — ' *CAT &MSGDTA) TOUSR(QSYSOPR) +
+       MSGTYPE(*ESCAPE)
+ENDPGM

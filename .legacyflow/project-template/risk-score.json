@@ -1,0 +1,17 @@
+{
+  "target_field": "",
+  "risk_score": null,
+  "risk_band": "",
+  "score_breakdown": {
+    "files_referencing_field": 0,
+    "drives_branching_logic": false,
+    "written_in_multiple_places": false,
+    "appears_in_batch_job": false,
+    "duplicated_rules": false,
+    "defined_in_shared_copybook": false,
+    "no_centralised_validation": false,
+    "centralised_validation_exists": false
+  },
+  "raw_score": null,
+  "final_score": null
+}

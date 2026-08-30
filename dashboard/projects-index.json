@@ -1,0 +1,18 @@
+[
+  {
+    "project_id": "20260829-demo-cust-status",
+    "goal_summary": "Assess impact of changing CUST_STATUS in Acme Distribution IBM i system — field reference map, risk score, business rules, effort estimate",
+    "date": "2026-08-29",
+    "workflow_type": "impact-analysis",
+    "target_field": "CUST_STATUS",
+    "risk_score": 9,
+    "risk_band": "high",
+    "files_affected": 6,
+    "reference_count": 31,
+    "write_sites": 2,
+    "duplicates_found": 4,
+    "rules_extracted": 49,
+    "hours_saved_estimate": "120-180",
+    "status": "complete"
+  }
+]

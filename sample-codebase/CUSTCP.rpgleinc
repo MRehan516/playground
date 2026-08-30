@@ -1,0 +1,33 @@
+      **-- CUSTCP.rpgleinc -------------------------------------------------**
+      **-- Copybook: Customer Master Data Structure                        **
+      **-- Shared by all programs that access the CUSTMAST database file.  **
+      **-- CUST_STATUS valid values:                                        **
+      **--   'A' = Active   (customer can place orders)                     **
+      **--   'I' = Inactive (customer exists but is dormant)                **
+      **--   'S' = Suspended (customer blocked pending review)              **
+      **--   'C' = Closed   (customer record archived; no transactions)     **
+      **--------------------------------------------------------------------**
+
+       D CUSTOMER_DS      DS                  QUALIFIED
+       D  CUST_ID                       7P 0
+       D  CUST_NAME                    40A
+       D  CUST_STATUS                   1A
+       D  CUST_CREDIT_LMT               9P 2
+       D  CUST_BALANCE                  9P 2
+       D  CUST_REGION                   3A
+       D  CUST_OPEN_DT                   D
+       D  CUST_LAST_ACT                  D
+
+      **-- Standalone status constants (for readability) --
+       D ST_ACTIVE        C                   CONST('A')
+       D ST_INACTIVE      C                   CONST('I')
+       D ST_SUSPENDED     C                   CONST('S')
+       D ST_CLOSED        C                   CONST('C')
+
+      **-- Credit limit thresholds by region --
+       D CREDIT_STD       C                   CONST(5000.00)
+       D CREDIT_PREMIUM   C                   CONST(25000.00)
+       D CREDIT_INTL      C                   CONST(50000.00)
+
+      **-- Maximum balance as percentage of credit limit before suspension --
+       D SUSPEND_THRESHOLD C                  CONST(110)
